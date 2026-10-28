@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robi SCA RBG</title>
+<style>
+  :root{
+    --rojo:#B4252B; --rojo-osc:#8A2522; --rojo-cl:#E0575C; --gris:#414140; --gris-2:#707072;
+    --noche:#24272B; --noche-2:#33373C; --fondo:#F0F3F5; --fondo-2:#EAEFF2; --blanco:#ffffff; --texto:#1f1f1f;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:Roboto,Arial,sans-serif;color:var(--texto)}
+  body{min-height:100vh;overflow:hidden;background:var(--noche)}
+  button{font-family:inherit}
+
+  /* Portada */
+  .portada{position:relative;min-height:100vh;display:flex;flex-direction:column;color:#fff;overflow:hidden;
+    background:
+      radial-gradient(circle at 78% 58%, rgba(180,37,43,.38), transparent 42%),
+      linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px) 0 0/28px 28px,
+      linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px) 0 0/28px 28px,
+      linear-gradient(150deg, var(--noche-2), var(--noche) 65%);
+    transition:filter .3s, opacity .3s}
+  .marca{display:flex;align-items:center;gap:10px;padding:18px 22px 0}
+  .marca svg{width:44px;height:30px}
+  .marca .nombre{font-weight:900;font-size:24px;letter-spacing:.5px;line-height:1}
+  .marca .nombre sup{color:var(--rojo-cl);font-size:18px;margin-left:1px}
+  .marca .sub{font-size:11.5px;color:#C9CED3;letter-spacing:.3px;margin-top:3px}
+  .hero{flex:1;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:8px;padding:8px 22px 18px}
+  .etiqueta{display:inline-block;background:rgba(180,37,43,.18);color:#FFB3B5;border:1px solid rgba(224,87,92,.45);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:600}
+  .hero h2{font-size:30px;line-height:1.1;margin:12px 0 8px}
+  .hero h2 span{color:var(--rojo-cl)}
+  .hero p{margin:0 0 16px;color:#D5DADE;font-size:14.5px;line-height:1.5;max-width:330px}
+  .cta{display:inline-flex;align-items:center;gap:8px;background:var(--rojo);color:#fff;border:0;border-radius:12px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer;min-height:46px;box-shadow:0 8px 20px rgba(180,37,43,.35)}
+  .cta:hover{background:var(--rojo-osc)}
+  .cta:focus-visible,.rapida:focus-visible,.robot:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  .rapidas{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+  .rapida{background:rgba(255,255,255,.08);color:#E8ECEF;border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:7px 12px;font-size:12.5px;cursor:pointer;min-height:34px}
+  .rapida:hover{background:rgba(255,255,255,.16)}
+  .robot{position:relative;border:0;background:none;padding:0;cursor:pointer;justify-self:center}
+  .robot::before{content:"";position:absolute;left:50%;bottom:6px;width:150px;height:22px;transform:translateX(-50%);background:radial-gradient(ellipse, rgba(0,0,0,.45), transparent 70%)}
+  .casco{position:relative;width:min(190px,34vw);height:auto;filter:drop-shadow(0 10px 16px rgba(0,0,0,.35));animation:flotar 2.8s ease-in-out infinite}
+  .casco .ojo{animation:parpadeo 4s infinite;transform-origin:center;transform-box:fill-box}
+  .casco .brazo-izq{transform-origin:21px 106px;transform-box:view-box;animation:saludo 3.2s ease-in-out infinite}
+  .casco .luz{animation:luz 2.4s ease-in-out infinite}
+  .robot:hover .brazo-izq{animation-duration:1s}
+  .franja{height:12px;background:repeating-linear-gradient(-45deg,var(--rojo) 0 14px,#1b1d20 14px 28px)}
+  @keyframes saludo{0%,55%,100%{transform:rotate(0)}65%{transform:rotate(-38deg)}75%{transform:rotate(-12deg)}85%{transform:rotate(-38deg)}}
+  @keyframes flotar{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+  @keyframes parpadeo{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+  @keyframes luz{0%,100%{opacity:1}50%{opacity:.55}}
+  @keyframes aparecer{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @media (max-width:520px){
+    .hero{grid-template-columns:1fr;text-align:center}
+    .hero p{margin-left:auto;margin-right:auto}
+    .rapidas{justify-content:center}
+    .robot{grid-row:1}
+    .casco{width:120px}
+    .rapidas{display:none}
+  }
+  body.abierto .portada{filter:blur(3px);opacity:.45;pointer-events:none}
+
+  /* Chat */
+  .chat{position:fixed;top:12px;bottom:12px;left:0;right:0;margin:auto;width:min(420px,calc(100vw - 24px));background:var(--blanco);border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.45);display:none;flex-direction:column;overflow:hidden;z-index:4;animation:aparecer .3s ease both}
+  body.abierto .chat{display:flex}
+  .cab{background:linear-gradient(135deg,var(--gris),var(--noche));color:#fff;display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:4px solid var(--rojo)}
+  .cab .icono{width:42px;height:42px;flex:none;background:#fff;border-radius:12px;display:grid;place-items:center}
+  .cab .icono svg{width:32px;height:24px}
+  .cab h1{font-size:16px;margin:0;line-height:1.2}
+  .cab p{margin:2px 0 0;font-size:12px;color:#dfe3e7}
+  .cab button{margin-left:auto;background:transparent;border:0;color:#fff;font-size:22px;cursor:pointer;width:44px;height:44px;border-radius:10px}
+  .cab button:hover{background:rgba(255,255,255,.12)}
+  .mensajes{flex:1;overflow-y:auto;padding:14px;background:var(--fondo);display:flex;flex-direction:column;gap:10px}
+  .msg{max-width:88%;padding:10px 12px;border-radius:14px;font-size:14px;line-height:1.45;white-space:pre-line;animation:aparecer .25s ease both}
+  .bot{background:var(--blanco);border:1px solid #e3e7eb;border-radius:4px 14px 14px 14px;align-self:flex-start}
+  .yo{background:var(--rojo);color:#fff;border-radius:14px 4px 14px 14px;align-self:flex-end}
+  .bot .fuente{display:block;margin-top:6px;font-size:11.5px;color:var(--gris-2)}
+  .bot b{color:var(--rojo-osc)}
+  .acciones{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .btn-gem{display:inline-flex;align-items:center;gap:6px;background:var(--rojo);color:#fff;border:0;border-radius:10px;padding:9px 12px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;min-height:40px}
+  .btn-gem:hover{background:var(--rojo-osc)}
+  .link-gem{background:none;border:0;color:var(--rojo);font-size:12.5px;cursor:pointer;padding:6px 0;text-decoration:underline;text-align:left}
+  .chips{display:flex;gap:6px;overflow-x:auto;padding:8px 12px;background:var(--fondo-2);border-top:1px solid #dde2e6;scrollbar-width:thin}
+  .chip{flex:none;background:var(--blanco);border:1px solid #d6dbe0;color:var(--gris);border-radius:999px;padding:7px 12px;font-size:12.5px;cursor:pointer;min-height:36px}
+  .chip:hover{border-color:var(--rojo);color:var(--rojo)}
+  .form{display:flex;gap:8px;padding:10px 12px;border-top:1px solid #e3e7eb;background:#fff}
+  input{flex:1;border:1px solid #cfd5da;border-radius:12px;padding:10px 12px;font-size:14px;font-family:inherit;min-height:44px}
+  input:focus{outline:2px solid var(--rojo);border-color:transparent}
+  .form button{background:var(--rojo);color:#fff;border:0;border-radius:12px;padding:0 16px;font-size:14px;font-weight:600;cursor:pointer;min-height:44px}
+  .form button:hover{background:var(--rojo-osc)}
+  .escribiendo{display:inline-flex;gap:4px}
+  .escribiendo i{width:7px;height:7px;border-radius:50%;background:var(--gris-2);animation:pulso 1s infinite}
+  .escribiendo i:nth-child(2){animation-delay:.15s}.escribiendo i:nth-child(3){animation-delay:.3s}
+  @keyframes pulso{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+
+<main class="portada">
+  <header class="marca">
+    <svg viewBox="0 0 64 44" aria-hidden="true"><path d="M8 36 C8 14 20 4 32 4 C44 4 56 14 56 36 Z" fill="#B4252B"/><path d="M27 5 L27 34 M37 5 L37 34" stroke="#8A2522" stroke-width="4"/><rect x="2" y="33" width="60" height="8" rx="4" fill="#8A2522"/><rect x="26" y="12" width="12" height="9" rx="3" fill="#2B2F33"/><circle cx="32" cy="16.5" r="3" fill="#FFE08A"/></svg>
+    <div><div class="nombre">RBG<sup>+</sup></div><div class="sub">Sistema de Control de Asistencia</div></div>
+  </header>
+
+  <section class="hero">
+    <div class="texto">
+      <span class="etiqueta">Asistente del proyecto G7</span>
+      <h2>Hola, soy <span>Robi</span></h2>
+      <p>Te respondo al instante sobre el SCA de RBG: actores, casos de uso, reglas del QR, reportes y el IREB. Si necesitas más detalle, te paso al Gem Tutor.</p>
+      <button class="cta" id="abrir" type="button">Hablar con Robi</button>
+      <div class="rapidas">
+        <button class="rapida" type="button">¿Qué es el SCA?</button>
+        <button class="rapida" type="button">¿Cómo se marca la asistencia?</button>
+        <button class="rapida" type="button">Resultado IREB</button>
+      </div>
+    </div>
+    <button class="robot" id="robot" type="button" aria-label="Abrir el chat con Robi">
+      <svg class="casco" viewBox="0 0 140 160" aria-hidden="true">
+        <g class="brazo-izq"><rect x="14" y="104" width="14" height="32" rx="7" fill="#DDE3E8" stroke="#BFC7CE" stroke-width="2"/><circle cx="21" cy="138" r="7" fill="#B4252B"/></g>
+        <g class="brazo-der"><rect x="112" y="104" width="14" height="32" rx="7" fill="#DDE3E8" stroke="#BFC7CE" stroke-width="2"/><circle cx="119" cy="138" r="7" fill="#B4252B"/></g>
+        <rect x="30" y="98" width="80" height="48" rx="18" fill="#F4F6F8" stroke="#BFC7CE" stroke-width="2"/>
+        <rect x="54" y="106" width="32" height="32" rx="7" fill="#B4252B"/>
+        <rect x="59" y="111" width="9" height="9" rx="1.5" fill="#fff"/><rect x="61.5" y="113.5" width="4" height="4" fill="#B4252B"/>
+        <rect x="72" y="111" width="9" height="9" rx="1.5" fill="#fff"/><rect x="74.5" y="113.5" width="4" height="4" fill="#B4252B"/>
+        <rect x="59" y="124" width="9" height="9" rx="1.5" fill="#fff"/><rect x="61.5" y="126.5" width="4" height="4" fill="#B4252B"/>
+        <rect x="72" y="124" width="4" height="4" fill="#fff"/><rect x="77" y="129" width="4" height="4" fill="#fff"/><rect x="72" y="129" width="3" height="3" fill="#fff"/><rect x="78" y="124" width="3" height="3" fill="#fff"/>
+        <rect x="60" y="92" width="20" height="10" rx="4" fill="#C9D0D6"/>
+        <circle cx="26" cy="70" r="8" fill="#8A2522"/><circle cx="114" cy="70" r="8" fill="#8A2522"/>
+        <rect x="28" y="44" width="84" height="54" rx="22" fill="#F4F6F8" stroke="#BFC7CE" stroke-width="2"/>
+        <rect x="38" y="54" width="64" height="34" rx="14" fill="#2B2F33"/>
+        <g class="ojo"><rect x="50" y="62" width="12" height="15" rx="6" fill="#7FE7FF"/></g>
+        <g class="ojo"><rect x="78" y="62" width="12" height="15" rx="6" fill="#7FE7FF"/></g>
+        <circle cx="53" cy="65" r="2" fill="#fff"/><circle cx="81" cy="65" r="2" fill="#fff"/>
+        <path d="M62 81 Q70 86 78 81" stroke="#7FE7FF" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <circle cx="44" cy="82" r="3.5" fill="#F28B8B" opacity=".75"/><circle cx="96" cy="82" r="3.5" fill="#F28B8B" opacity=".75"/>
+        <path d="M26 50 C26 22 46 8 70 8 C94 8 114 22 114 50 Z" fill="#B4252B"/>
+        <path d="M60 9 L60 48 M80 9 L80 48" stroke="#8A2522" stroke-width="5"/>
+        <path d="M42 18 C37 27 35 37 35 48" stroke="#E0575C" stroke-width="3" fill="none" opacity=".8"/>
+        <rect x="16" y="46" width="108" height="9" rx="4.5" fill="#8A2522"/>
+        <rect x="61" y="18" width="18" height="14" rx="4" fill="#2B2F33"/>
+        <circle class="luz" cx="70" cy="25" r="4.5" fill="#FFE08A"/>
+      </svg>
+    </button>
+  </section>
+  <div class="franja"></div>
+</main>
+
+<section class="chat" role="dialog" aria-label="Chat con Robi">
+  <div class="cab">
+    <div class="icono"><svg viewBox="0 0 64 44" aria-hidden="true"><path d="M8 36 C8 14 20 4 32 4 C44 4 56 14 56 36 Z" fill="#B4252B"/><path d="M27 5 L27 34 M37 5 L37 34" stroke="#8A2522" stroke-width="4"/><rect x="2" y="33" width="60" height="8" rx="4" fill="#8A2522"/><rect x="26" y="12" width="12" height="9" rx="3" fill="#2B2F33"/><circle cx="32" cy="16.5" r="3" fill="#FFE08A"/></svg></div>
+    <div><h1>Robi SCA RBG</h1><p>Respuestas del SRS, las guías y el IREB</p></div>
+    <button id="cerrar" type="button" aria-label="Cerrar chat">×</button>
+  </div>
+  <div class="mensajes" id="mensajes" aria-live="polite"></div>
+  <div class="chips" id="chips"></div>
+  <div class="form" id="form">
+    <input id="entrada" autocomplete="off" placeholder="Pregunta algo del proyecto..." aria-label="Escribe tu pregunta">
+    <button type="button" id="enviar">Enviar</button>
+  </div>
+</section>
+
+<script>
+const GEM = 'https://gemini.google.com/gem/e091bb6ff33d';
+
+// Base de conocimiento: solo datos del SRS_RBG_V4, las Guías 1 y 2 y el informe IREB del G7.
+const KB = [
+ {k:'sca que es proyecto trata problema rbg whatsapp fotos',
+  r:'El SCA es el Sistema de Control de Asistencia de <b>RBG Ingeniería y Mantenimiento</b>. Hoy la asistencia se registra con fotos y mensajes en grupos de WhatsApp, y eso deja información dispersa, registros duplicados o incompletos y errores al sumar las horas para la nómina. El sistema web centraliza las marcaciones y genera los reportes de horas.', f:'SRS 1.2 Alcance'},
+ {k:'modulos alcance incluye funciones que hace',
+  r:'El sistema tiene <b>9 módulos</b>: usuarios y roles, personal de obra, obras y asignaciones, códigos QR, registro de asistencia, novedades y correcciones, consultas e historial, y cálculo y reportes de horas.', f:'SRS 1.2 Alcance'},
+ {k:'fuera alcance no incluye excluye nomina biometria app movil nativa',
+  r:'No incluye: cálculo y pago de nómina, biometría, seguimiento continuo de ubicación, contratos o vacaciones, facturación y contabilidad, app móvil nativa, registro manual libre de asistencia ni integraciones automáticas con otros sistemas.', f:'SRS 1.2 y 1.6'},
+ {k:'actores cuantos actores usuarios quienes roles',
+  r:'Son <b>6 actores</b>: Usuario del sistema, Gerente General, Jefe de Logística, Supervisor de obra, Asistente contable y Colaborador.', f:'SRS 1.5'},
+ {k:'gerente general',
+  r:'El <b>Gerente General</b> administra el sistema: personal de obra, usuarios, roles, permisos, códigos QR y solicitudes. Participa en CU-02, CU-03, CU-04, CU-07, CU-08 y CU-09.', f:'SRS 1.4 y 1.5'},
+ {k:'jefe logistica obras perimetro horarios asignaciones',
+  r:'El <b>Jefe de Logística</b> gestiona las obras, sus horarios, perímetros y las asignaciones de Colaboradores y Supervisores. Es el actor de CU-05 Gestionar Obras y Asignaciones.', f:'SRS 1.5'},
+ {k:'supervisor obra',
+  r:'El <b>Supervisor de obra</b> registra la asistencia de los Colaboradores escaneando su QR, reporta novedades y marca su propia asistencia con su cuenta y ubicación puntual.', f:'SRS 1.5'},
+ {k:'asistente contable contadora',
+  r:'La <b>Asistente contable</b> consulta la asistencia y genera o exporta los reportes de horas definitivas para nómina en PDF o XLSX.', f:'SRS 1.5'},
+ {k:'colaborador trabajador',
+  r:'El <b>Colaborador</b> registra su asistencia según la modalidad: presenta su QR al Supervisor o usa su enlace personal si no hay Supervisor. Puede ver su asistencia, su propio QR y pedir correcciones.', f:'SRS 1.5'},
+ {k:'casos uso cuantos lista nivel 0 cu',
+  r:'Son <b>9 casos de uso de nivel 0</b>:\nCU-01 Registrar Asistencia\nCU-02 Generar Reportes de Horas\nCU-03 Gestionar Códigos QR del Personal\nCU-04 Gestionar Personal de Obra\nCU-05 Gestionar Obras y Asignaciones\nCU-06 Acceder al sistema\nCU-07 Gestionar Novedades y Correcciones\nCU-08 Gestionar Usuarios y Roles\nCU-09 Consultar Asistencia e Historial', f:'SRS 1.4'},
+ {k:'cu01 cu 01 registrar asistencia marcacion',
+  r:'<b>CU-01 Registrar Asistencia</b> (Supervisor de obra y Colaborador). Registra las marcaciones de la jornada por QR, enlace personal o cuenta del Supervisor. Está ligado a RF-01 y sus clases son PantallaAsistencia, ControlAsistencia, PersonalObra, MarcacionAsistencia y sus repositorios.', f:'SRS y Guía 2'},
+ {k:'cu02 cu 02 reporte reportes horas generar',
+  r:'<b>CU-02 Generar Reportes de Horas</b> (Gerente General y Asistente contable). Calcula el consolidado de horas definitivas y adicionales aprobadas por persona y obra, y lo exporta en PDF o XLSX. El periodo máximo es de <b>31 días</b> y excluye jornadas pendientes o incompletas sin corrección aprobada.', f:'Guía 1 y Guía 2'},
+ {k:'cu03 cu 03 qr codigo codigos activo token puede tener colaborador reemplazar perder pierde',
+  r:'<b>CU-03 Gestionar Códigos QR del Personal</b> (Gerente General y Colaborador). Reglas: máximo <b>un QR Activo</b> por Colaborador, reemplazarlo invalida el anterior, el QR solo tiene un <b>token aleatorio sin datos personales</b> y el Colaborador solo ve y descarga el suyo.', f:'Guía 1 y Guía 2'},
+ {k:'cu04 cu 04 personal obra gestionar registrar inactivar',
+  r:'<b>CU-04 Gestionar Personal de Obra</b> (Gerente General). Registra una sola vez a Colaboradores y Supervisores, y permite actualizar, inactivar, reactivar y consultar sus datos.', f:'SRS 1.4'},
+ {k:'cu05 cu 05 obras asignaciones',
+  r:'<b>CU-05 Gestionar Obras y Asignaciones</b> (Jefe de Logística). Registra obras, perímetros y horarios versionados, y gestiona asignaciones. La modalidad del Colaborador depende de si hay o no un Supervisor asignado.', f:'SRS 1.4'},
+ {k:'cu06 cu 06 acceder acceso login sesion contrasena cuenta activar recuperar',
+  r:'<b>CU-06 Acceder al sistema</b> (Usuario del sistema). Permite activar la cuenta, iniciar sesión, cambiar la contraseña y recuperar el acceso con el correo autorizado por RBG. Para entrar se necesita cuenta Activa y un único rol Activo. El token es vigente y de un solo uso.', f:'Guía 1 y Guía 2'},
+ {k:'cu07 cu 07 novedades correcciones',
+  r:'<b>CU-07 Gestionar Novedades y Correcciones</b> (Colaborador, Supervisor de obra y Gerente General). Reportar novedades, pedir correcciones y resolverlas conservando la trazabilidad.', f:'SRS 1.4'},
+ {k:'cu08 cu 08 usuarios roles permisos',
+  r:'<b>CU-08 Gestionar Usuarios y Roles</b> (Gerente General). Cuentas vinculadas o administrativas, roles configurables, permisos y la asignación de cada usuario a un único rol.', f:'SRS 1.4'},
+ {k:'cu09 cu 09 consultar historial',
+  r:'<b>CU-09 Consultar Asistencia e Historial</b> (Colaborador, Supervisor, Gerente General y Asistente contable). Consulta las marcaciones y todo lo que explica el cálculo de cada jornada, sin reemplazar el reporte para nómina.', f:'SRS 1.4'},
+ {k:'modalidad modalidades marca marcar marco formas asistencia enlace personal ubicacion',
+  r:'Hay 3 formas de marcar:\n• <b>QR</b>: cuando la obra tiene Supervisor asignado, él escanea el QR del Colaborador.\n• <b>Enlace personal con ubicación puntual</b>: cuando no hay Supervisor asignado.\n• <b>Cuenta del Supervisor</b>: para su propia asistencia, con ubicación.', f:'SRS 1.1 y 1.3'},
+ {k:'jornada marcaciones entrada salida descanso cuatro',
+  r:'Una jornada tiene hasta <b>4 marcaciones</b>: entrada, salida al descanso, regreso del descanso y salida final. Si el horario no tiene descanso, solo se piden entrada y salida final.', f:'SRS 1.2'},
+ {k:'sin conexion internet offline sincronizar cola',
+  r:'Si no hay internet, las marcaciones se guardan <b>cifradas en el dispositivo</b> y se sincronizan cuando vuelve la conexión, en orden y sin duplicados. La cola local soporta al menos 50 marcaciones pendientes.', f:'SRS 1.2 y 1.3'},
+ {k:'requisitos cuantos funcionales no funcionales rf rnf',
+  r:'El SRS tiene <b>47 subrequerimientos funcionales</b> agrupados en 9 módulos y <b>36 requisitos no funcionales</b>.', f:'SRS 2'},
+ {k:'trazabilidad matriz rf cu rf01 rf02 rf03 rf06',
+  r:'Matriz RF-CU de las guías:\nRF-01 → CU-01 Registrar Asistencia\nRF-02 → CU-02 Generar Reportes de Horas\nRF-03 → CU-03 Gestionar Códigos QR\nRF-06 → CU-06 Acceder al sistema\nLos cuatro tienen prioridad obligatoria.', f:'Guía 1, sección 10'},
+ {k:'clases analisis frontera control entidad repositorio boundary entity',
+  r:'Clases de análisis de la Guía 2:\n• <b>Frontera</b>: PantallaAsistencia, PantallaReportes, PantallaGestionQR, PantallaAcceso\n• <b>Control</b>: ControlAsistencia, ControlReportes, ControlQR, ControlAcceso\n• <b>Entidad</b>: PersonalObra, MarcacionAsistencia, ReporteHoras, CodigoQR, CuentaUsuario\n• <b>Repositorio</b>: RepositorioPersonal, RepositorioMarcaciones, RepositorioReportes, RepositorioQR, RepositorioUsuarios', f:'Guía 2, sección 6'},
+ {k:'controlasistencia valida modalidad secuencia',
+  r:'<b>ControlAsistencia</b> es la clase de control que valida la modalidad y la secuencia y luego registra la marcación (validarModalidad, validarSecuencia, registrarMarcacion).', f:'Guía 2'},
+ {k:'secuencia secuencias flujo',
+  r:'En las secuencias de análisis el actor usa la <b>frontera</b>, la frontera manda la solicitud al <b>control</b>, el control valida y consulta los <b>repositorios</b>, y el resultado vuelve al actor. Hay una secuencia por cada caso seleccionado.', f:'Guía 2'},
+ {k:'ireb calidad evaluacion checklist lista comprobacion resultado porcentaje',
+  r:'Evaluación IREB con <b>17 preguntas</b>: Contenido 8/9 (89 %), Documentación 5/5 (100 %), Nivel de acuerdo 3/3 (100 %). Total <b>16/17, 94 %</b>.', f:'Informe IREB'},
+ {k:'fallo fallo ireb no cumplio debilidad recomendacion',
+  r:'Lo único que no se cumplió fue tener un <b>proceso acotado en plazo y presupuesto</b> para verificar que el sistema cumple lo especificado. Por eso se recomienda definir casos de prueba por requisito.', f:'Informe IREB'},
+ {k:'norma iso 29148 estandar',
+  r:'El levantamiento de requisitos tomó como referencia la norma <b>ISO/IEC/IEEE 29148:2018</b>.', f:'Informe IREB'},
+ {k:'costo horas estimacion presupuesto',
+  r:'Para el levantamiento se estimaron <b>150 horas</b>, 3 personas y un costo de <b>2170.04 dólares</b>.', f:'Informe IREB'},
+ {k:'colores paleta identidad tipografia fuente diseño interfaz',
+  r:'Paleta del SRS: <b>#B71611</b> identidad y acciones, #8A2522 énfasis, #030104 texto, #707072 bordes, fondos #EAEFF2 y #F0F3F5. Tipografía Roboto, mínimo 14 px, controles de 44 × 44 px.', f:'SRS-6'},
+ {k:'integraciones correo email servicios externos',
+  r:'Integraciones incluidas: correo para activar cuentas y recuperar contraseñas, ubicación del dispositivo para validar el perímetro y exportación de reportes en PDF y XLSX. No hay API públicas ni webhooks.', f:'SRS 1.2 y 1.3'},
+ {k:'seguridad https tls navegadores chrome',
+  r:'Toda la comunicación usa <b>HTTPS con TLS 1.2 o superior</b>. Funciona en Chrome, Edge, Firefox y Safari.', f:'SRS-8 y SRS-9'},
+ {k:'equipo grupo integrantes docente quien',
+  r:'Grupo 7 de Análisis y Diseño de Software, NRC 36838: Bolaños Toapanta Luciana Francheska, Flores Toapanta Daniela Alejandra y Gómez Quinaluisa Joffre Esteban. Docente: Ing. Jenny A. Ruiz R.', f:'Informe IREB'},
+ {k:'hola buenas saludos hey',
+  r:'¡Hola! Pregúntame del SCA: actores, casos de uso, reglas del QR, modalidades de marcación, reportes, clases o el IREB.', f:''}
+];
+
+const SUG = ['¿Qué es el SCA?','¿Cuáles son los actores?','Casos de uso','¿Cómo se marca la asistencia?','Reglas del QR','Reportes de horas','Clases de análisis','Resultado IREB','¿Qué pasa sin internet?'];
+
+const $ = (s)=>document.querySelector(s);
+const caja = $('#mensajes');
+const norm = (t)=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9 ]/g,' ');
+const STOP = new Set('el la los las de del que y o a en un una es son se por para con como cual cuales cuantos cuantas me mi tu su al lo le hay sobre esta este eso esa sus qué'.split(' '));
+const toks = (t)=>norm(t).split(/\s+/).filter(w=>w && !STOP.has(w));
+const KBT = KB.map(e=>({...e, set:new Set(toks(e.k))}));
+
+function buscar(q){
+  const qt = toks(q); if(!qt.length) return null;
+  const qn = norm(q).replace(/\s+/g,'');
+  let mejor=null, top=0;
+  for(const e of KBT){
+    let s=0;
+    for(const w of qt){ if(e.set.has(w)) s+=2; else if([...e.set].some(k=>k.length>3 && (k.startsWith(w)||w.startsWith(k)))) s+=1; }
+    const cu = qn.match(/cu0?([1-9])/); if(cu && e.k.includes('cu0'+cu[1])) s+=6;
+    if(s>top){top=s; mejor=e;}
+  }
+  const minimo = 2;
+  return top>=minimo ? mejor : null;
+}
+
+function agregar(html, quien){
+  const d=document.createElement('div'); d.className='msg '+quien; d.innerHTML=html; caja.appendChild(d); caja.scrollTop=caja.scrollHeight; return d;
+}
+async function irAlGem(pregunta){
+  let copiado=false;
+  try{ await navigator.clipboard.writeText(pregunta); copiado=true; }catch(e){}
+  window.open(GEM,'_blank','noopener');
+  agregar(copiado ? 'Listo, abrí el Gem y tu pregunta ya está copiada. Pégala con Ctrl+V.' : 'Abrí el Gem en otra pestaña. Copia esta pregunta y pégala allá:\n<b>'+pregunta.replace(/[<>]/g,'')+'</b>','bot');
+}
+function botonGem(pregunta, principal){
+  const b=document.createElement('button');
+  if(principal){ b.className='btn-gem'; b.innerHTML='Preguntar al Gem Tutor SCA RBG ↗'; }
+  else { b.className='link-gem'; b.textContent='¿Necesitas más detalle? Pregúntale al Gem ↗'; }
+  b.onclick=()=>irAlGem(pregunta);
+  return b;
+}
+function responder(q){
+  agregar(q.replace(/[<>]/g,''), 'yo');
+  const t=agregar('<span class="escribiendo"><i></i><i></i><i></i></span>','bot');
+  setTimeout(()=>{
+    const e=buscar(q);
+    if(e){
+      t.innerHTML = e.r + (e.f?'<span class="fuente">Fuente: '+e.f+'</span>':'');
+      if(e.f) { const a=document.createElement('div'); a.className='acciones'; a.appendChild(botonGem(q,false)); t.appendChild(a); }
+    } else {
+      t.innerHTML = 'Eso no lo tengo en mis respuestas rápidas. El <b>Gem Tutor SCA RBG</b> conoce todo el proyecto y te puede responder con más contexto.\nTe abro el Gem en otra pestaña y copio tu pregunta para que solo la pegues.';
+      const a=document.createElement('div'); a.className='acciones'; a.appendChild(botonGem(q,true)); t.appendChild(a);
+    }
+    caja.scrollTop=caja.scrollHeight;
+  }, 450);
+}
+
+function abrirChat(){ document.body.classList.add('abierto'); if(!caja.children.length){ agregar('¡Hola! Soy <b>Robi</b>, el robot asistente del Sistema de Control de Asistencia de RBG.\nRespondo rápido con datos del SRS, las guías y el informe IREB. Si necesitas algo más profundo, te paso al Gem.','bot'); } $('#entrada').focus(); }
+$('#abrir').onclick=abrirChat;
+$('#robot').onclick=abrirChat;
+document.querySelectorAll('.rapida').forEach(b=>b.onclick=()=>{ abrirChat(); responder(b.textContent); });
+$('#cerrar').onclick=()=>document.body.classList.remove('abierto');
+function enviar(){ const v=$('#entrada').value.trim(); if(!v) return; $('#entrada').value=''; responder(v); }
+$('#enviar').onclick=enviar;
+$('#entrada').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); enviar(); } });
+const chips=$('#chips');
+SUG.forEach(s=>{ const c=document.createElement('button'); c.type='button'; c.className='chip'; c.textContent=s; c.onclick=()=>responder(s); chips.appendChild(c); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.body.classList.remove('abierto'); });
+</script>
+</body>
+</html>
