@@ -162,7 +162,7 @@
 </section>
 
 <script>
-const GEM = 'https://gemini.google.com/gem/e091bb6ff33d';
+const GEM = 'https://gemini.google.com/gem/ed3d4098f108';
 
 // Base de conocimiento: solo datos del SRS_RBG_V4, las Guías 1 y 2 y el informe IREB del G7.
 const KB = [
@@ -193,17 +193,17 @@ const KB = [
  {k:'cu03 cu 03 qr codigo codigos activo token puede tener colaborador reemplazar perder pierde',
   r:'<b>CU-03 Gestionar Códigos QR del Personal</b> (Gerente General y Colaborador). Reglas: máximo <b>un QR Activo</b> por Colaborador, reemplazarlo invalida el anterior, el QR solo tiene un <b>token aleatorio sin datos personales</b> y el Colaborador solo ve y descarga el suyo.', f:'Guía 1 y Guía 2'},
  {k:'cu04 cu 04 personal obra gestionar registrar inactivar',
-  r:'<b>CU-04 Gestionar Personal de Obra</b> (Gerente General). Registra una sola vez a Colaboradores y Supervisores, y permite actualizar, inactivar, reactivar y consultar sus datos.', f:'SRS 1.4'},
+  r:'<b>CU-04 Gestionar Personal de Obra</b> (Gerente General). Ligado a RF-04. Registra una sola vez a Colaboradores y Supervisores nacionales o extranjeros con documento único, y permite actualizar, inactivar, reactivar y consultar sus datos. La cuenta se crea después. Clases: PantallaPersonal, ControlPersonal, RepositorioPersonal, RepositorioAsignaciones, RepositorioQR y RepositorioUsuarios.', f:'Guía 1 y Guía 2'},
  {k:'cu05 cu 05 obras asignaciones',
-  r:'<b>CU-05 Gestionar Obras y Asignaciones</b> (Jefe de Logística). Registra obras, perímetros y horarios versionados, y gestiona asignaciones. La modalidad del Colaborador depende de si hay o no un Supervisor asignado.', f:'SRS 1.4'},
+  r:'<b>CU-05 Gestionar Obras y Asignaciones</b> (Jefe de Logística). Ligado a RF-05. La obra queda Activa al registrarse, cada cambio de horario crea una nueva versión sin alterar asistencias pasadas y las asignaciones no se solapan. La modalidad del Colaborador depende de si hay o no un Supervisor asignado. Clases: PantallaObras, ControlObras, RepositorioObras, RepositorioAsignaciones y RepositorioPersonal.', f:'Guía 1 y Guía 2'},
  {k:'cu06 cu 06 acceder acceso login sesion contrasena cuenta activar recuperar',
   r:'<b>CU-06 Acceder al sistema</b> (Usuario del sistema). Permite activar la cuenta, iniciar sesión, cambiar la contraseña y recuperar el acceso con el correo autorizado por RBG. Para entrar se necesita cuenta Activa y un único rol Activo. El token es vigente y de un solo uso.', f:'Guía 1 y Guía 2'},
  {k:'cu07 cu 07 novedades correcciones',
-  r:'<b>CU-07 Gestionar Novedades y Correcciones</b> (Colaborador, Supervisor de obra y Gerente General). Reportar novedades, pedir correcciones y resolverlas conservando la trazabilidad.', f:'SRS 1.4'},
+  r:'<b>CU-07 Gestionar Novedades y Correcciones</b> (Colaborador, Supervisor de obra y Gerente General). Ligado a RF-07. Las novedades y correcciones quedan Pendientes, el registro original nunca se borra y al aprobar una corrección se crea un ajuste trazable que recalcula la jornada. Clases: PantallaNovedades, ControlNovedades, RepositorioNovedades y RepositorioMarcaciones.', f:'Guía 1 y Guía 2'},
  {k:'cu08 cu 08 usuarios roles permisos',
-  r:'<b>CU-08 Gestionar Usuarios y Roles</b> (Gerente General). Cuentas vinculadas o administrativas, roles configurables, permisos y la asignación de cada usuario a un único rol.', f:'SRS 1.4'},
+  r:'<b>CU-08 Gestionar Usuarios y Roles</b> (Gerente General). Ligado a RF-08. Cuentas vinculadas o administrativas, roles configurables y permisos, con un único rol por usuario. La cuenta queda Pendiente de activación hasta tener rol y no se desactiva un rol con usuarios Activos. Clases: PantallaUsuariosRoles, ControlUsuariosRoles, RepositorioUsuarios, RepositorioRoles y RepositorioPersonal.', f:'Guía 1 y Guía 2'},
  {k:'cu09 cu 09 consultar historial',
-  r:'<b>CU-09 Consultar Asistencia e Historial</b> (Colaborador, Supervisor, Gerente General y Asistente contable). Consulta las marcaciones y todo lo que explica el cálculo de cada jornada, sin reemplazar el reporte para nómina.', f:'SRS 1.4'},
+  r:'<b>CU-09 Consultar Asistencia e Historial</b> (Colaborador, Supervisor, Gerente General y Asistente contable). Ligado a RF-09, prioridad deseable. Cada actor consulta solo las jornadas de su alcance con marcaciones, descuentos, novedades y correcciones, sin coordenadas exactas sin permiso y sin reemplazar el reporte para nómina. Clases: PantallaHistorial, ControlHistorial, RepositorioMarcaciones y RepositorioNovedades.', f:'Guía 1 y Guía 2'},
  {k:'modalidad modalidades marca marcar marco formas asistencia enlace personal ubicacion',
   r:'Hay 3 formas de marcar:\n• <b>QR</b>: cuando la obra tiene Supervisor asignado, él escanea el QR del Colaborador.\n• <b>Enlace personal con ubicación puntual</b>: cuando no hay Supervisor asignado.\n• <b>Cuenta del Supervisor</b>: para su propia asistencia, con ubicación.', f:'SRS 1.1 y 1.3'},
  {k:'jornada marcaciones entrada salida descanso cuatro',
@@ -212,14 +212,14 @@ const KB = [
   r:'Si no hay internet, las marcaciones se guardan <b>cifradas en el dispositivo</b> y se sincronizan cuando vuelve la conexión, en orden y sin duplicados. La cola local soporta al menos 50 marcaciones pendientes.', f:'SRS 1.2 y 1.3'},
  {k:'requisitos cuantos funcionales no funcionales rf rnf',
   r:'El SRS tiene <b>47 subrequerimientos funcionales</b> agrupados en 9 módulos y <b>36 requisitos no funcionales</b>.', f:'SRS 2'},
- {k:'trazabilidad matriz rf cu rf01 rf02 rf03 rf06',
-  r:'Matriz RF-CU de las guías:\nRF-01 → CU-01 Registrar Asistencia\nRF-02 → CU-02 Generar Reportes de Horas\nRF-03 → CU-03 Gestionar Códigos QR\nRF-06 → CU-06 Acceder al sistema\nLos cuatro tienen prioridad obligatoria.', f:'Guía 1, sección 10'},
+ {k:'trazabilidad matriz rf cu rf01 rf02 rf03 rf04 rf05 rf06 rf07 rf08 rf09',
+  r:'Matriz RF-CU de las guías, con los 9 casos trazables:\nRF-01 → CU-01 Registrar Asistencia\nRF-02 → CU-02 Generar Reportes de Horas\nRF-03 → CU-03 Gestionar Códigos QR\nRF-04 → CU-04 Gestionar Personal de Obra\nRF-05 → CU-05 Gestionar Obras y Asignaciones\nRF-06 → CU-06 Acceder al sistema\nRF-07 → CU-07 Gestionar Novedades y Correcciones\nRF-08 → CU-08 Gestionar Usuarios y Roles\nRF-09 → CU-09 Consultar Asistencia e Historial\nTodos son obligatorios menos RF-09, que es deseable.', f:'Guía 1, sección 10'},
  {k:'clases analisis frontera control entidad repositorio boundary entity',
-  r:'Clases de análisis de la Guía 2:\n• <b>Frontera</b>: PantallaAsistencia, PantallaReportes, PantallaGestionQR, PantallaAcceso\n• <b>Control</b>: ControlAsistencia, ControlReportes, ControlQR, ControlAcceso\n• <b>Entidad</b>: PersonalObra, MarcacionAsistencia, ReporteHoras, CodigoQR, CuentaUsuario\n• <b>Repositorio</b>: RepositorioPersonal, RepositorioMarcaciones, RepositorioReportes, RepositorioQR, RepositorioUsuarios', f:'Guía 2, sección 6'},
+  r:'Clases de análisis de la Guía 2:\n• <b>Frontera</b>: PantallaAsistencia, PantallaReportes, PantallaGestionQR, PantallaAcceso, PantallaPersonal, PantallaObras, PantallaNovedades, PantallaUsuariosRoles, PantallaHistorial\n• <b>Control</b>: ControlAsistencia, ControlReportes, ControlQR, ControlAcceso, ControlPersonal, ControlObras, ControlNovedades, ControlUsuariosRoles, ControlHistorial\n• <b>Entidad</b>: PersonalObra, MarcacionAsistencia, JornadaAsistencia, AjusteAsistencia, ReporteHoras, CodigoQR, CuentaUsuario, Rol, Obra, HorarioObra, AsignacionObra, Novedad, SolicitudCorreccion\n• <b>Repositorio</b>: RepositorioPersonal, RepositorioMarcaciones, RepositorioReportes, RepositorioQR, RepositorioUsuarios, RepositorioObras, RepositorioAsignaciones, RepositorioNovedades, RepositorioRoles', f:'Guía 2'},
  {k:'controlasistencia valida modalidad secuencia',
   r:'<b>ControlAsistencia</b> es la clase de control que valida la modalidad y la secuencia y luego registra la marcación (validarModalidad, validarSecuencia, registrarMarcacion).', f:'Guía 2'},
  {k:'secuencia secuencias flujo',
-  r:'En las secuencias de análisis el actor usa la <b>frontera</b>, la frontera manda la solicitud al <b>control</b>, el control valida y consulta los <b>repositorios</b>, y el resultado vuelve al actor. Hay una secuencia por cada caso seleccionado.', f:'Guía 2'},
+  r:'En las secuencias de análisis el actor usa la <b>frontera</b>, la frontera manda la solicitud al <b>control</b>, el control valida y consulta los <b>repositorios</b>, y el resultado vuelve al actor. Hay una secuencia por cada uno de los 9 casos de uso.', f:'Guía 2'},
  {k:'ireb calidad evaluacion checklist lista comprobacion resultado porcentaje',
   r:'Evaluación IREB con <b>17 preguntas</b>: Contenido 8/9 (89 %), Documentación 5/5 (100 %), Nivel de acuerdo 3/3 (100 %). Total <b>16/17, 94 %</b>.', f:'Informe IREB'},
  {k:'fallo fallo ireb no cumplio debilidad recomendacion',
@@ -244,7 +244,7 @@ const SUG = ['¿Qué es el SCA?','¿Cuáles son los actores?','Casos de uso','¿
 
 const $ = (s)=>document.querySelector(s);
 const caja = $('#mensajes');
-const norm = (t)=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9 ]/g,' ');
+const norm = (t)=>t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ');
 const STOP = new Set('el la los las de del que y o a en un una es son se por para con como cual cuales cuantos cuantas me mi tu su al lo le hay sobre esta este eso esa sus qué'.split(' '));
 const toks = (t)=>norm(t).split(/\s+/).filter(w=>w && !STOP.has(w));
 const KBT = KB.map(e=>({...e, set:new Set(toks(e.k))}));
